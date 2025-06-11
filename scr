@@ -1,0 +1,49 @@
+#!/bin/bash
+
+export JAVA_HOME="/booleanfs/sahoo/softwares/java/jdk1.8.0_45"
+export PATH=$JAVA_HOME/bin:$PATH
+export CLASSPATH="/booleanfs2/sahoo/BoNE/stepminer-1.1.jar"
+stepminer="java -cp $CLASSPATH -Xms64m -Xmx10G tools.CustomAnalysis"
+stepminer1="java -cp $CLASSPATH -Xms64m -Xmx10G tools.Analyze"
+export PERL_HASH_SEED=0
+
+#--------------- download the required data
+
+#D=data/friedman-2017-brain
+#perl analyze.pl data-download AD3 $D
+#perl analyze.pl toidx $D-expr.txt > $D-idx.txt
+#perl analyze.pl thr $D-expr.txt 2 500 0.5> $D-thr.txt
+#perl analyze.pl bv $D > $D-bv.txt
+#perl analyze.pl Info $D > $D-info.txt
+#perl analyze.pl VInfo $D > $D-vinfo.txt
+
+#FILE=results/ad-net-1
+#rm -f $FILE.rl
+#${stepminer}
+#${stepminer} boolean bitMatrix $FILE.rl \
+#  data/friedman-2017-brain-bv.txt \
+#  $FILE.ph All 0.1 3 0.05
+#${stepminer} boolean bitMatrixFill $FILE.rl
+#${stepminer} boolean bitMatrixFillStats $FILE.rl
+#${stepminer} boolean bitMatrixPrint $FILE.rl > $FILE-res.txt
+
+mkdir -p Random
+
+function apply2() {
+  ${stepminer} shuffle bv Random/$2-$1.bv $3/network.bv $1
+  ${stepminer} boolean pairs Random/$2-$1.pairs Random/$2-$1.bv network.ph All 0.1 3 0.05
+}
+
+function apply1() {
+  perl /booleanfs/sahoo/scripts/buildNetwork.pl shuffle Random/$2-$1.bv $3/network.bv
+  ${stepminer} boolean pairs Random/$2-$1.pairs Random/$2-$1.bv network.ph All 0.1 3 0.05
+}
+
+cp data/friedman-2017-brain-bv.txt Random/network.bv
+for ((i=0;i<2;i++)) do
+   apply1 $i ad Random
+done
+for ((i=2;i<4;i++)) do
+   apply2 $i ad Random
+done
+${stepminer} boolean pairs Random/ad-original.pairs Random/network.bv network.ph All 0.1 3 0.05
