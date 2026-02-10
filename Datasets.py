@@ -646,6 +646,68 @@ def ADDatasets():
     return df
 bone.ADDatasets = ADDatasets
 
+def ADValidationDatasets():
+    training = ['GSE125583-fusiform gyrus', 
+    'GSE15222-cortical', 'GSE118553-Entorhinal_Cortex']
+    validation = ['GSE118553-Frontal_Cortex', 'GSE118553-Temporal_Cortex',
+       'GSE5281-all', 'GSE5281-HIP', 'GSE84422-all',
+       'GSE84422-Amygdala', 'GSE84422-Nucleus Accumbens', 'GSE84422-all',
+       'GSE84422-Middle Temporal Gyrus', 'GSE84422-Superior Temporal Gyrus',
+       'GSE48350-all', 'GSE106241-Braak 0 vs', 'GSE106241-Braak 0-2 vs',
+       'GSE110298-Activity',
+       'GSE125050-astrocyte', 'GSE125050-neuron',
+       'GSE95587-fusiform gyrus', 'GSE131617-ADC', 'GSE122063-ADC',
+       'GSE150696-BA9', 'GSE4757-EC', 'GSE28146-HIP', 'GSE159699-HIP',
+       'GSE26927-EC', 'GSE157827-PFC',
+       'GSE138852-oligo', 'GSE138852-astro', 'GSE138852-OPC',
+       'GSE138852-neuron', 'GSE138852-mg',
+       'Pooled-no ADC', 'Pooled-ADC', 'GSE104687-TCx', 'GSE104687-PCx',
+       'GSE104687-HIP', 'GSE44772 GSE44770-PFC']
+    names = training + validation
+    dtypes = ['training'] * len(training) + ['validation'] * len(validation)
+    datasets = [bone.IBDAnalysis() for i in range(39)]
+    datasets[0].getFriedman2017()
+    datasets[1].getWebster2009()
+    datasets[2].getPatel2019(2, 0)
+    datasets[3].getPatel2019(2, 1)
+    datasets[4].getPatel2019(2, 2)
+    datasets[5].getLiang2007()
+    datasets[6].getLiang2007(2, 1)
+    datasets[7].getWang2016(3)
+    datasets[8].getWang2016(4, 0)
+    datasets[9].getWang2016(4, 1)
+    datasets[10].getWang2016II(3)
+    datasets[11].getWang2016II(4, 2)
+    datasets[12].getWang2016II(4, 10)
+    datasets[13].getBerchtold2014()
+    datasets[14].getMarttinen2019()
+    datasets[15].getMarttinen2019(2)
+    datasets[16].getBerchtold2019(2)
+    datasets[17].getSrinivasan2020II(2, 1)
+    datasets[18].getSrinivasan2020II(2, 2)
+    datasets[19].getFriedman2018()
+    datasets[20].getMiyashita2014(2)
+    datasets[21].getMcKay2019(2)
+    datasets[22].getLow2021(2)
+    datasets[23].getDunckley2006()
+    datasets[24].getBlalock2011(2)
+    datasets[25].getNativio2020(2)
+    datasets[26].getPascal2011(2, 0, 0)
+    datasets[27].getNancy2020()
+    datasets[28].getChew2019(2, 2)
+    datasets[29].getChew2019(2, 3)
+    datasets[30].getChew2019(2, 4)
+    datasets[31].getChew2019(2, 6)
+    datasets[32].getChew2019(2, 7)
+    datasets[33].getADPooledDyn(2, 0)
+    datasets[34].getADPooledDyn(2, 1)
+    datasets[35].getMiller2017(2, 0)
+    datasets[36].getMiller2017(2, 1)
+    datasets[37].getMiller2017(2, 2)
+    datasets[38].getZhang2013("MAC39.2")
+    return datasets, names, dtypes
+bone.ADValidationDatasets = ADValidationDatasets
+
 def DP1(dfs): # VERTICAL
     sns = bone.sns
     plt = bone.plt
@@ -2312,4 +2374,70 @@ def getSMps19PFCmmIII(self, tn=1, ta=0):
     self.initData(atype, atypes, ahash)
     return
 bone.IBDAnalysis.getSMps19PFCmmIII = getSMps19PFCmmIII
+
+def getSMps19PFCmm(self, tn=1):
+    self.prepareData("AD55.9")
+    atype = self.h.getSurvName("c Type")
+    atypes = ['WT', 'hTau', 'CgA-KO/hTau']
+    ahash = {'WT':0, 'hTau':1, 'CgA-KO_hTau':2}
+    if tn == 2:
+        atypes = ['WT', 'PS19']
+        ahash = {'WT':0, 'hTau':1}
+    if tn == 3:
+        ddx3y = self.h.getExprData('DDX3Y')
+        atypes = ['WT-F', 'WT-M', 'PS19-F', 'PS19-M',
+                'CgA-KO/PS19-F', 'CgA-KO/PS19-M']
+        atype = ['WT-F' if i > 1 and 
+                float(ddx3y[i]) < 2 and atype[i] == 'WT'
+                 else atype[i] for i in range(len(atype))]
+        atype = ['WT-M' if i > 1 and
+                float(ddx3y[i]) >= 2 and atype[i] == 'WT'
+                 else atype[i] for i in range(len(atype))]
+        atype = ['PS19-F' if i > 1 and 
+                float(ddx3y[i]) < 2 and atype[i] == 'hTau'
+                 else atype[i] for i in range(len(atype))]
+        atype = ['PS19-M' if i > 1 and
+                float(ddx3y[i]) >= 2 and atype[i] == 'hTau'
+                 else atype[i] for i in range(len(atype))]
+        atype = ['CgA-KO/PS19-F' if i > 1 and 
+                float(ddx3y[i]) < 2 and atype[i] == 'CgA-KO_hTau'
+                 else atype[i] for i in range(len(atype))]
+        atype = ['CgA-KO/PS19-M' if i > 1 and
+                float(ddx3y[i]) >= 2 and atype[i] == 'CgA-KO_hTau'
+                 else atype[i] for i in range(len(atype))]
+        ahash = {}
+    if tn == 4:
+        ddx3y = self.h.getExprData('DDX3Y')
+        atypes = ['WT', 'PS19-F', 'CgA-KO/PS19-F', 'CgA-KO/PS19-M']
+        atype = ['PS19-F' if i > 1 and 
+                float(ddx3y[i]) < 2 and atype[i] == 'hTau'
+                 else atype[i] for i in range(len(atype))]
+        atype = ['CgA-KO/PS19-F' if i > 1 and 
+                float(ddx3y[i]) < 2 and atype[i] == 'CgA-KO_hTau'
+                 else atype[i] for i in range(len(atype))]
+        atype = ['CgA-KO/PS19-M' if i > 1 and
+                float(ddx3y[i]) >= 2 and atype[i] == 'CgA-KO_hTau'
+                 else atype[i] for i in range(len(atype))]
+        ahash = {}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getSMps19PFCmm = getSMps19PFCmm
+
+def getLabuza2025ad(self,tn=1,ta=0, tb=0):
+    self.prepareData("AD74")
+    atype = self.h.getSurvName('c diagnosis');
+    atypes = ['CTR', 'MCI', 'AD']
+    ahash = {}
+    self.initData(atype, atypes, ahash)
+    return  
+bone.IBDAnalysis.getLabuza2025ad = getLabuza2025ad
+
+def getLazarov2024ADscblk(self,tn=1,ta=0, tb=0):
+    self.prepareData("AD75")
+    atype = self.h.getSurvName('c diagnosis');
+    atypes = ['YA', 'HA', 'SA', 'MCI', 'AD']
+    ahash = {}
+    self.initData(atype, atypes, ahash)
+    return  
+bone.IBDAnalysis.getLazarov2024ADscblk = getLazarov2024ADscblk
 
