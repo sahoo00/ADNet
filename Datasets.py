@@ -704,7 +704,7 @@ def ADValidationDatasets():
     datasets[35].getMiller2017(2, 0)
     datasets[36].getMiller2017(2, 1)
     datasets[37].getMiller2017(2, 2)
-    datasets[38].getZhang2013("MAC39.2")
+    datasets[38].getZhang2013pfc()
     return datasets, names, dtypes
 bone.ADValidationDatasets = ADValidationDatasets
 
@@ -789,45 +789,6 @@ def DP1(dfs): # VERTICAL
     return df,ax,fig
 bone.DP1 = DP1
 
-def getADPooledDyn(self, tn=1):
-    self.prepareData("AD7")
-    atype = self.h.getSurvName('c AD specific');
-    ahash = {'0':0, '1':1}
-    rval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c Disease State');
-    atypes = ['N', 'AD']
-    ahash = {'Normal':0, "Alzheimer's Disease":1, 'normal':0,
-            'definite AD':0, 'Control':0}
-    if (tn == 2):
-        atype = [atype[i] if rval[i] == 1 else None for i in range(len(atype))]
-    if (tn == 3):
-        atype = [atype[i] if rval[i] == 0 else None for i in range(len(atype))]
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getADPooledDyn = getADPooledDyn
-
-
-def getLiang2007(self):
-    self.prepareData("AD2")
-    atype = self.h.getSurvName('c Disease State');
-    atypes = ['N', 'AD']
-    ahash = {'normal\xa0':0, "Alzheimer's Disease\xa0":1}
-    ahash = asciiNorm(ahash)
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getLiang2007 = getLiang2007
-
-
-def getFriedman2017(self):
-    self.prepareData("AD3")
-    atype = self.h.getSurvName('c diagnosis');
-    atypes = ['N', 'AD']
-    ahash = {'control':0, "Alzheimer's disease":1}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getFriedman2017 = getFriedman2017
-
-
 def getBerchtold2018(self, tn = 1):
     self.prepareData("AZ3", "/Users/mgosztyl/public_html/Hegemon/explore.conf")
     atype = self.h.getSurvName('c physical activity tier');
@@ -894,113 +855,6 @@ def getZhang2013m(self, dbid = 'AZ12', tn = 1):
     self.initData(atype, atypes, ahash)
     return
 bone.IBDAnalysis.getZhang2013m = getZhang2013m
-
-
-def getBerchtold2014(self, tn = 1):
-    self.prepareData("AZ11", "/Users/mgosztyl/public_html/Hegemon/explore.conf")
-    atype = self.h.getSurvName("c src1")
-    atype = [str(i) for i in atype]
-    res = []
-    for k in atype:
-        l1 = k.split(",")
-        if (len(l1) != 4):
-            res.extend([k])
-        else:
-            res.extend([l1[1].strip() + "_" + l1[2].strip()])
-    atype = res
-    atypes = ['N', 'AD']
-    ahash = {'entorhinal cortex_male':0,
-            'entorhinal cortex_male_AD':1,
-            'entorhinal cortex_female':0,
-            'entorhinal cortex_female_AD':1,
-            'superior frontal gyrus_male':0,
-            'superior frontal gyrus_male_AD':1,
-            'superior frontal gyrus_female':0,
-            'superior frontal gyrus_female_AD':1,
-            'postcentral gyrus_male':0,
-            'post-central gyrus_male_AD':1,
-            'postcentral gyrus_female':0,
-            'post-central gyrus_female_AD':1,
-            'hippocampus_male':0,
-            'hippocampus_male_AD':1,
-            'hippocampus_female':0,
-            'hippocampus_female_AD':1}
-    if (tn == 2):
-        ahash = {'entorhinal cortex_male':0,
-                'entorhinal cortex_male_AD':1,
-                'superior frontal gyrus_male':0,
-                'superior frontal gyrus_male_AD':1,
-                'postcentral gyrus_male':0,
-                'post-central gyrus_male_AD':1,
-                'hippocampus_male':0,
-                'hippocampus_male_AD':1}
-    if (tn == 3):
-        ahash = {'entorhinal cortex_female':0,
-                'entorhinal cortex_female_AD':1,
-                'superior frontal gyrus_female':0,
-                'superior frontal gyrus_female_AD':1,
-                'postcentral gyrus_female':0,
-                'post-central gyrus_female_AD':1,
-                'hippocampus_female':0,
-                'hippocampus_female_AD':1}
-    if (tn == 4):
-        ahash = {'entorhinal cortex_male':0,
-                'entorhinal cortex_male_AD':1,
-                'entorhinal cortex_female':0,
-                'entorhinal cortex_female_AD':1}
-    if (tn == 5):
-        ahash = {'superior frontal gyrus_male':0,
-                'superior frontal gyrus_male_AD':1,
-                'superior frontal gyrus_female':0,
-                'superior frontal gyrus_female_AD':1}
-    if (tn == 6):
-        ahash = {'postcentral gyrus_male':0,
-                'post-central gyrus_male_AD':1,
-                'postcentral gyrus_female':0,
-                'post-central gyrus_female_AD':1}
-    if (tn == 7):
-        ahash = {'hippocampus_male':0,
-                'hippocampus_male_AD':1,
-                'hippocampus_female':0,
-                'hippocampus_female_AD':1}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getBerchtold2014 = getBerchtold2014
-
-
-def getWang2016(self, dbid="AD9", tn = 1):
-    self.dbid = dbid
-    atype = self.h.getSurvName('c brain region')
-    ahash = {'Inferior Temporal Gyrus':3,
-            'Parahippocampal Gyrus':4,
-            'Middle Temporal Gyrus':5,
-            'Occipital Visual Cortex':6,
-            'Prefrontal Cortex':7,
-            'Hippocampus':8,
-            'Caudate Nucleus':9,
-            'Frontal Pole':10,
-            'Precentral Gyrus':11,
-            'Posterior Cingulate Cortex':12,
-            'Superior Temporal Gyrus':13,
-            'Superior Parietal Lobule':14,
-            'Temporal Pole':15,
-            'Anterior Cingulate':16,
-            'Inferior Frontal Gyrus':17,
-            'Dorsolateral Prefrontal Cortex':18,
-            'Putamen':19}
-    rval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c neuropathological category')
-    atypes = ['N', 'AD']
-    ahash = {'definite AD':1, 'Possible AD':1,
-            'Normal':0, 'Probable AD':1}
-    if (tn >= 2):
-        atypes = ['N', 'AD']
-        ahash = {'definite AD':1, 'Normal':0}
-    if (tn >= 3):
-        atype = [atype[i] if rval[i] == tn else None for i in range(len(atype))]
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getWang2016 = getWang2016
 
 
 def getBerchtold2014RMA(self, tn=1):
@@ -1241,159 +1095,6 @@ def getScheckel2019 (self, tn = 1):
 bone.IBDAnalysis.getScheckel2019  = getScheckel2019 
 
 
-def getPatel2019(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD8")
-    atype = self.h.getSurvName('c tissue')
-    ahash = {'Temporal_Cortex':1, 'Cerebellum':3,
-             'Frontal_Cortex':2, 'Entorhinal_Cortex':0}
-    tval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c disease state')
-    atypes = ['N', 'A', "AD"]
-    ahash = {'AsymAD':1, 'AD':2, 'control':0}
-    if (tn == 2):
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-        atypes = ['N', "AD"]
-        ahash = {'AD':1, 'control':0}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getPatel2019 = getPatel2019
-
-
-def getFriedman2017(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD3")
-    atype = self.h.getSurvName('c diagnosis')
-    atypes = ['N', "AD"]
-    ahash = {'control':0, "Alzheimer's disease":1}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getFriedman2017 = getFriedman2017
-
-
-def getLiang2007(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD2")
-    atype = self.h.getSurvName('c organ region')
-    atype1 = self.h.getSurvName('c Organ Region')
-    atype = [atype[k] if atype[k] != '' else atype1[k]
-                    for k in range(len(atype))]
-    ahash = {'Medial Temporal Gyrus\xa0':0, 'hippocampus\xa0':1,
-            'Superior Frontal Gyrus\xa0':2, 'Primary Visual Cortex\xa0':3,
-            'Posterior Singulate\xa0':4, 'Entorhinal Cortex\xa0':5,
-            'Posterior Cingulate\xa0':6, 'Posterior cingulate\xa0':7}
-    tval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c Disease State')
-    atype1 = self.h.getSurvName('c disease state')
-    atype = [atype[k] if atype[k] != '' else atype1[k]
-            for k in range(len(atype))]
-    atypes = ['N', "AD"]
-    ahash = {'normal\xa0':0, "Alzheimer's Disease\xa0":1}
-    if (tn == 2):
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-    if (tn == 3):
-        ah = {4:1, 6:1, 7:1}
-        atype = [atype[i] if tval[i] in ah
-                 else None for i in range(len(atype))]
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getLiang2007 = getLiang2007
-
-
-def getWang2016(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD9")
-    atype = self.h.getSurvName('c brain region')
-    ahash = {'Amygdala':0, 'Nucleus Accumbens':1}
-    tval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c neuropathological category')
-    atypes = ['N', "AD", 'pS', 'pB']
-    ahash = {'definite AD':1, 'Possible AD':2, 'Normal':0, 'Probable AD':3}
-    if (tn == 2):
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-    if (tn == 3):
-        atypes = ['N', "AD"]
-        ahash = {'definite AD':1, 'Normal':0}
-    if (tn == 4):
-        atypes = ['N', "AD"]
-        ahash = {'definite AD':1, 'Normal':0}
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getWang2016 = getWang2016
-
-
-def getWang2016II(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD10")
-    atype = self.h.getSurvName('c brain region')
-    ahash = {'Inferior Temporal Gyrus':0, 'Parahippocampal Gyrus':1,
-            'Middle Temporal Gyrus':2, 'Occipital Visual Cortex':3,
-            'Prefrontal Cortex':4, 'Hippocampus':5, 'Caudate Nucleus':6,
-            'Frontal Pole':7, 'Precentral Gyrus':8,
-            'Posterior Cingulate Cortex':9, 'Superior Temporal Gyrus':10,
-            'Superior Parietal Lobule':11, 'Temporal Pole':12,
-            'Anterior Cingulate':13, 'Inferior Frontal Gyrus':14,
-            'Dorsolateral Prefrontal Cortex':15, 'Putamen':16}
-    tval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c neuropathological category')
-    atypes = ['N', "AD", 'pS', 'pB']
-    ahash = {'Possible AD':2, 'definite AD':1, 'Normal':0, 'Probable AD':3}
-    if (tn == 2):
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-    if (tn == 3):
-        atypes = ['N', "AD"]
-        ahash = {'definite AD':1, 'Normal':0}
-    if (tn == 4):
-        atypes = ['N', "AD"]
-        ahash = {'definite AD':1, 'Normal':0}
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getWang2016II = getWang2016II
-
-
-def getBerchtold2014(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD11")
-    atype = self.h.getSurvName('c brain region')
-    ahash = {'entorhinal cortex':0, 'postcentral gyrus':1, 'hippocampus':2,
-            'superior frontal gyrus':3, 'post-central gyrus':4}
-    tval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c AD specific')
-    atypes = ['N', "AD"]
-    ahash = {'0':0, '1':1}
-    if (tn == 2):
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getBerchtold2014 = getBerchtold2014
-
-
-def getMarttinen2019(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD12")
-    atype = self.h.getSurvName('c braak stage')
-    atypes = ['N', "AD"]
-    ahash = {'3':1, '5':1, '2':1, '6':1, '1':1, '0':0, '4':1}
-    if (tn == 2):
-        ahash = {'3':1, '5':1, '2':0, '6':1, '1':0, '0':0, '4':1}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getMarttinen2019 = getMarttinen2019
-
-
-def getWebster2009(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD14")
-    atype = self.h.getSurvName('c src1')
-    atype = [re.sub(" .*", "", str(k)) for k in atype]
-    atypes = ['N', "AD"]
-    ahash = { "Alzheimer's":1, 'neuropathologically':0}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getWebster2009 = getWebster2009
-
-
 def getLu2014(self, tn=1, ta=0, tb=0):
     self.prepareData("AD16")
     atype = self.h.getSurvName('c age')
@@ -1428,19 +1129,6 @@ def getLu2004(self, tn=1, ta=0, tb=0):
 bone.IBDAnalysis.getLu2004 = getLu2004
 
 
-def getBerchtold2019(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD20")
-    atype = self.h.getSurvName('c physical activity tier')
-    atypes = ['H', 'M', 'L']
-    ahash = {'moderate activity':1, 'high activity':0, 'low activity':2}
-    if tn == 2:
-        atypes = ['H', 'L']
-        ahash = {'high activity':0, 'low activity':1}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getBerchtold2019 = getBerchtold2019
-
-
 def getSrinivasan2020(self, tn=1, ta=0, tb=0):
     self.prepareData("AD21")
     atype = self.h.getSurvName('c diagnosis')
@@ -1449,47 +1137,6 @@ def getSrinivasan2020(self, tn=1, ta=0, tb=0):
     self.initData(atype, atypes, ahash)
     return
 bone.IBDAnalysis.getSrinivasan2020 = getSrinivasan2020
-
-
-def getSrinivasan2020II(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD22")
-    atype = self.h.getSurvName('c cell type')
-    ahash = {'myeloid':0, 'astrocyte':1, 'neuron':2, 'endothelial':3}
-    tval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c diagnosis')
-    atypes = ['N', 'AD']
-    ahash = {'Control':0, 'AD':1}
-    if (tn == 2):
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-    if (tn == 3):
-        atype = self.h.getSurvName('c cell type')
-        atypes = ['neuron', 'myeloid', 'astrocyte', 'endothelial']
-        ahash = {}
-    if (tn == 4):
-        atype = self.h.getSurvName('c cell type')
-        btype = self.h.getSurvName('c diagnosis')
-        atype = [ f"{atype[k]}-{btype[k]}" for k in range(len(atype))]
-        atypes = ['M-H', 'M-AD', 'A-H', 'A-AD', 'E-H', 'E-AD',
-                'N-H', 'N-AD']
-        ahash = {'myeloid-Control':0, 'myeloid-AD':1,
-                'astrocyte-Control':2, 'astrocyte-AD':3,
-                'endothelial-Control':4, 'endothelial-AD':5,
-                'neuron-Control':6, 'neuron-AD':7}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getSrinivasan2020II = getSrinivasan2020II
-
-
-def getFriedman2018(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD23")
-    atype = self.h.getSurvName('c diagnosis')
-    atypes = ['N', 'AD']
-    ahash = {"Alzheimer's disease":1, 'control':0}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getFriedman2018 = getFriedman2018
-
 
 def getRodriguez2021(self, tn=1, ta=0, tb=0):
     self.prepareData("AD24")
@@ -1551,18 +1198,6 @@ def getSood2015II(self, tn=1, ta=0, tb=0):
 bone.IBDAnalysis.getSood2015II = getSood2015II
 
 
-def getMiyashita2014(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD28")
-    atype = self.h.getSurvName('c braak nft stage')
-    atypes = ['0', 'I-II', 'III-IV', 'V-VI']
-    ahash = {}
-    if (tn == 2):
-        atypes = ['0', 'V-VI']
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getMiyashita2014 = getMiyashita2014
-
-
 def getSamsudin2016(self, tn=1, ta=0, tb=0):
     self.prepareData("AD29")
     atype = self.h.getSurvName('c diagnosis')
@@ -1571,31 +1206,6 @@ def getSamsudin2016(self, tn=1, ta=0, tb=0):
     self.initData(atype, atypes, ahash)
     return
 bone.IBDAnalysis.getSamsudin2016 = getSamsudin2016
-
-
-def getMcKay2019(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD30")
-    atype = self.h.getSurvName('c patient diagnosis')
-    atypes = ['C', 'AD', 'VD']
-    ahash = {'Control':0, 'Vascular dementia':2, "Alzheimer's disease":1}
-    if (tn == 2):
-        atypes = ['C', 'AD']
-        ahash = {'Control':0, "Alzheimer's disease":1}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getMcKay2019 = getMcKay2019
-
-
-def getLow2021(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD31")
-    atype = self.h.getSurvName('c desc')
-    atypes = ['CTRL', 'DLB', 'AD', 'PDD']
-    ahash = {}
-    if (tn == 2):
-        atypes = ['CTRL', 'AD']
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getLow2021 = getLow2021
 
 
 def getDong2013(self, tn=1, ta=0, tb=0):
@@ -1696,30 +1306,6 @@ def getAxol2021(self, tn = 1):
 bone.IBDAnalysis.getAxol2021 = getAxol2021
 
 
-def getDunckley2006(self, tn = 1):
-    self.prepareData("AD44")
-    atype = self.h.getSurvName('c brain, Entorhinal Cortex')
-    atype = [re.sub(".* ", "", str(k)) for k in atype]
-    atypes = ['C', 'AD']
-    ahash = {'tangle_e1_le1':1, 'normal_e1_le1':0}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getDunckley2006 = getDunckley2006
-
-
-def getBlalock2011(self, tn = 1):
-    self.prepareData("AD45")
-    atype = self.h.getSurvName('c disease status')
-    atypes = ['C', 'I', 'M', 'S']
-    ahash = {'Moderate':2, 'Severe':3, 'Incipient':1, 'Control':0}
-    if tn == 2:
-        atypes = ['C', 'AD']
-        ahash = {'Moderate':1, 'Severe':1, 'Incipient':1, 'Control':0}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getBlalock2011 = getBlalock2011
-
-
 def getQian2020(self, tn = 1):
     self.prepareData("AD47")
     atype = self.h.getSurvName('c genetic manipulation')
@@ -1785,69 +1371,6 @@ def getGate2024ADblood(self, tn = 1):
     return
 bone.IBDAnalysis.getGate2024ADblood = getGate2024ADblood
 
-def getNativio2020(self, tn=1, ta=0, tb=0):
-    self.prepareData("ad59")
-    atype = self.h.getSurvName('c title2')
-    atypes = ['Y', 'O', "AD"]
-    ahash = {'AD [RNA-seq]':2, 'Old [RNA-seq]':1, 'Young [RNA-seq]':0}
-    if (tn == 2):
-        atypes = ['O', "AD"]
-        ahash = {'AD [RNA-seq]':1, 'Old [RNA-seq]':0}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getNativio2020 = getNativio2020
-
-def getPascal2011(self, tn=1, ta=0, tb=0):
-    self.prepareData("ad63")
-    atype = self.h.getSurvName('c gender (ch1)')
-    ahash = {'F':0, 'M':1}
-    gval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c disease (ch1)')
-    ahash = {"Alzheimer's disease":0, 'Amyotrophic lateral sclerosis':1,
-             "Huntington's disease":2, 'Multiple sclerosis':3,
-             "Parkinson's disease":4, 'Schizophrenia':5}
-    tval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c disease2 (ch1)')
-    atypes = ['C', 'D']
-    ahash = {'AD_Control':0, 'AD_Disease':1, 'ALS_Control':0, 'ALS_Disease':1,
-             'HD_Control':0, 'HD_Disease':1, 'MS_Control':0, 'MS_Disease':1,
-             'PD_Control':0, 'PD_Disease':1, 'SCHIZ_Control':0, 'SCHIZ_Disease':1}
-    if (tn == 2):
-        atype = [atype[i] if tval[i] == ta and gval[i] == tb
-                 else None for i in range(len(atype))]
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getPascal2011 = getPascal2011
-def getNancy2020(self, tn=1, ta=0, tb=0):
-    self.prepareData("ad69")
-    atype = self.h.getSurvName('c diagnosis (ch1)')
-    atypes = ['C', "AD"]
-    ahash = {'AD':1, 'healthy control':0}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getNancy2020 = getNancy2020
-
-def getChew2019(self, tn=1, ta=0, tb=0):
-    self.prepareData("ad68.3")
-    atype=self.h.getSurvName('c CellType')
-    ahash = {'unID':0, 'endo':1, 'oligo':2, 'astro':3, 'OPC':4, 'doublet':5,
-             'neuron':6, 'mg':7}
-    tval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c disease state (ch1)')
-    atypes = ['C', "AD"]
-    ahash = {'control':0, 'AD':1}
-    if (tn == 2):
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-    if (tn == 3):
-        atype=self.h.getSurvName('c CellType')
-        atypes = ['unID', 'endo', 'oligo', 'astro', 'OPC', 'doublet',
-                 'neuron', 'mg']
-        ahash = {}
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getChew2019 = getChew2019
-
 def getSwarup2021(self, tn=1, ta=0, tb=0):
     self.prepareData("ad54")
     atype=self.h.getSurvName('c diagnosis (ch1)')
@@ -1856,44 +1379,6 @@ def getSwarup2021(self, tn=1, ta=0, tb=0):
     self.initData(atype, atypes, ahash)
     return
 bone.IBDAnalysis.getSwarup2021 = getSwarup2021
-
-def getADPooledDyn(self, tn=1, ta=0, tb=0):
-    self.prepareData("AD7")
-    atype = self.h.getSurvName('c AD specific');
-    ahash = {'0':0, '1':1}
-    tval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c Disease State');
-    atypes = ['N', 'AD']
-    ahash = {'Normal':0, "Alzheimer's Disease":1, 'normal':0,
-            'definite AD':0, 'Control':0}
-    if (tn == 2):
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getADPooledDyn = getADPooledDyn
-
-def getMiller2017(self, tn=1, ta=0, tb=0):
-    self.prepareData("ad6")
-    atype = self.h.getSurvName('c hemisphere (ch1)');
-    ahash = {'left':0, 'right':1}
-    sval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c brain region (ch1)');
-    ahash = {'TCx':0, 'PCx':1, 'HIP':2, 'FWM':3}
-    tval = [ahash[i] if i in ahash else None for i in atype]
-    atype = self.h.getSurvName('c new_nincds_arda_diagnosis');
-    atypes = ['No Dementia', "AD" ]
-    ahash = {'No Dementia':0, "Possible Alzheimer'S Disease":1,
-            "Probable Alzheimer'S Disease":1}
-    if (tn == 2):
-        atype = [atype[i] if tval[i] == ta
-                 else None for i in range(len(atype))]
-    if (tn == 3):
-        atype = [atype[i] if tval[i] == ta and sval[i] == tb
-                 else None for i in range(len(atype))]
-    self.initData(atype, atypes, ahash)
-    return
-bone.IBDAnalysis.getMiller2017 = getMiller2017
 
 def getYang2020(self, tn=1, ta=0, tb=0):
     self.prepareData("ad103")
@@ -2440,4 +1925,373 @@ def getLazarov2024ADscblk(self,tn=1,ta=0, tb=0):
     self.initData(atype, atypes, ahash)
     return  
 bone.IBDAnalysis.getLazarov2024ADscblk = getLazarov2024ADscblk
+
+def getFriedman2017(self):
+    self.prepareData("AD0", "data/explore.conf")
+    atype = self.h.getSurvName('c diagnosis');
+    atypes = ['N', 'AD']
+    ahash = {'control':0, "Alzheimer's disease":1}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getFriedman2017 = getFriedman2017
+
+def getWebster2009(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD1", "data/explore.conf")
+    atype = self.h.getSurvName('c src1')
+    atype = [re.sub(" .*", "", str(k)) for k in atype]
+    atypes = ['N', "AD"]
+    ahash = { "Alzheimer's":1, 'neuropathologically':0}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getWebster2009 = getWebster2009
+
+def getPatel2019(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD2", "data/explore.conf")
+    atype = self.h.getSurvName('c tissue')
+    ahash = {'Temporal_Cortex':1, 'Cerebellum':3,
+             'Frontal_Cortex':2, 'Entorhinal_Cortex':0}
+    tval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c disease state')
+    atypes = ['N', 'A', "AD"]
+    ahash = {'AsymAD':1, 'AD':2, 'control':0}
+    if (tn == 2):
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+        atypes = ['N', "AD"]
+        ahash = {'AD':1, 'control':0}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getPatel2019 = getPatel2019
+
+def getLiang2007(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD3", "data/explore.conf")
+    atype = self.h.getSurvName('c organ region')
+    atype1 = self.h.getSurvName('c Organ Region')
+    atype = [atype[k] if atype[k] != '' else atype1[k]
+                    for k in range(len(atype))]
+    ahash = {'Medial Temporal Gyrus\xa0':0, 'hippocampus\xa0':1,
+            'Superior Frontal Gyrus\xa0':2, 'Primary Visual Cortex\xa0':3,
+            'Posterior Singulate\xa0':4, 'Entorhinal Cortex\xa0':5,
+            'Posterior Cingulate\xa0':6, 'Posterior cingulate\xa0':7}
+    tval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c Disease State')
+    atype1 = self.h.getSurvName('c disease state')
+    atype = [atype[k] if atype[k] != '' else atype1[k]
+            for k in range(len(atype))]
+    atypes = ['N', "AD"]
+    ahash = {'normal\xa0':0, "Alzheimer's Disease\xa0":1}
+    if (tn == 2):
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+    if (tn == 3):
+        ah = {4:1, 6:1, 7:1}
+        atype = [atype[i] if tval[i] in ah
+                 else None for i in range(len(atype))]
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getLiang2007 = getLiang2007
+
+def getWang2016(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD4", "data/explore.conf")
+    atype = self.h.getSurvName('c brain region')
+    ahash = {'Amygdala':0, 'Nucleus Accumbens':1}
+    tval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c neuropathological category')
+    atypes = ['N', "AD", 'pS', 'pB']
+    ahash = {'definite AD':1, 'Possible AD':2, 'Normal':0, 'Probable AD':3}
+    if (tn == 2):
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+    if (tn == 3):
+        atypes = ['N', "AD"]
+        ahash = {'definite AD':1, 'Normal':0}
+    if (tn == 4):
+        atypes = ['N', "AD"]
+        ahash = {'definite AD':1, 'Normal':0}
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getWang2016 = getWang2016
+
+
+def getWang2016II(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD5", "data/explore.conf")
+    atype = self.h.getSurvName('c brain region')
+    ahash = {'Inferior Temporal Gyrus':0, 'Parahippocampal Gyrus':1,
+            'Middle Temporal Gyrus':2, 'Occipital Visual Cortex':3,
+            'Prefrontal Cortex':4, 'Hippocampus':5, 'Caudate Nucleus':6,
+            'Frontal Pole':7, 'Precentral Gyrus':8,
+            'Posterior Cingulate Cortex':9, 'Superior Temporal Gyrus':10,
+            'Superior Parietal Lobule':11, 'Temporal Pole':12,
+            'Anterior Cingulate':13, 'Inferior Frontal Gyrus':14,
+            'Dorsolateral Prefrontal Cortex':15, 'Putamen':16}
+    tval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c neuropathological category')
+    atypes = ['N', "AD", 'pS', 'pB']
+    ahash = {'Possible AD':2, 'definite AD':1, 'Normal':0, 'Probable AD':3}
+    if (tn == 2):
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+    if (tn == 3):
+        atypes = ['N', "AD"]
+        ahash = {'definite AD':1, 'Normal':0}
+    if (tn == 4):
+        atypes = ['N', "AD"]
+        ahash = {'definite AD':1, 'Normal':0}
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getWang2016II = getWang2016II
+
+
+def getBerchtold2014(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD6", "data/explore.conf")
+    atype = self.h.getSurvName('c brain region')
+    ahash = {'entorhinal cortex':0, 'postcentral gyrus':1, 'hippocampus':2,
+            'superior frontal gyrus':3, 'post-central gyrus':4}
+    tval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c AD specific')
+    atypes = ['N', "AD"]
+    ahash = {'0':0, '1':1}
+    if (tn == 2):
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getBerchtold2014 = getBerchtold2014
+
+
+def getMarttinen2019(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD7", "data/explore.conf")
+    atype = self.h.getSurvName('c braak stage')
+    atypes = ['N', "AD"]
+    ahash = {'3':1, '5':1, '2':1, '6':1, '1':1, '0':0, '4':1}
+    if (tn == 2):
+        ahash = {'3':1, '5':1, '2':0, '6':1, '1':0, '0':0, '4':1}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getMarttinen2019 = getMarttinen2019
+
+def getBerchtold2019(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD8", "data/explore.conf")
+    atype = self.h.getSurvName('c physical activity tier')
+    atypes = ['H', 'M', 'L']
+    ahash = {'moderate activity':1, 'high activity':0, 'low activity':2}
+    if tn == 2:
+        atypes = ['H', 'L']
+        ahash = {'high activity':0, 'low activity':1}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getBerchtold2019 = getBerchtold2019
+
+def getSrinivasan2020II(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD9", "data/explore.conf")
+    atype = self.h.getSurvName('c cell type')
+    ahash = {'myeloid':0, 'astrocyte':1, 'neuron':2, 'endothelial':3}
+    tval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c diagnosis')
+    atypes = ['N', 'AD']
+    ahash = {'Control':0, 'AD':1}
+    if (tn == 2):
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+    if (tn == 3):
+        atype = self.h.getSurvName('c cell type')
+        atypes = ['neuron', 'myeloid', 'astrocyte', 'endothelial']
+        ahash = {}
+    if (tn == 4):
+        atype = self.h.getSurvName('c cell type')
+        btype = self.h.getSurvName('c diagnosis')
+        atype = [ f"{atype[k]}-{btype[k]}" for k in range(len(atype))]
+        atypes = ['M-H', 'M-AD', 'A-H', 'A-AD', 'E-H', 'E-AD',
+                'N-H', 'N-AD']
+        ahash = {'myeloid-Control':0, 'myeloid-AD':1,
+                'astrocyte-Control':2, 'astrocyte-AD':3,
+                'endothelial-Control':4, 'endothelial-AD':5,
+                'neuron-Control':6, 'neuron-AD':7}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getSrinivasan2020II = getSrinivasan2020II
+
+
+def getFriedman2018(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD10", "data/explore.conf")
+    atype = self.h.getSurvName('c diagnosis')
+    atypes = ['N', 'AD']
+    ahash = {"Alzheimer's disease":1, 'control':0}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getFriedman2018 = getFriedman2018
+
+
+def getMiyashita2014(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD11", "data/explore.conf")
+    atype = self.h.getSurvName('c braak nft stage')
+    atypes = ['0', 'I-II', 'III-IV', 'V-VI']
+    ahash = {}
+    if (tn == 2):
+        atypes = ['0', 'V-VI']
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getMiyashita2014 = getMiyashita2014
+
+def getMcKay2019(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD12", "data/explore.conf")
+    atype = self.h.getSurvName('c patient diagnosis')
+    atypes = ['C', 'AD', 'VD']
+    ahash = {'Control':0, 'Vascular dementia':2, "Alzheimer's disease":1}
+    if (tn == 2):
+        atypes = ['C', 'AD']
+        ahash = {'Control':0, "Alzheimer's disease":1}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getMcKay2019 = getMcKay2019
+
+
+def getLow2021(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD13", "data/explore.conf")
+    atype = self.h.getSurvName('c desc')
+    atypes = ['CTRL', 'DLB', 'AD', 'PDD']
+    ahash = {}
+    if (tn == 2):
+        atypes = ['CTRL', 'AD']
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getLow2021 = getLow2021
+
+
+def getDunckley2006(self, tn = 1):
+    self.prepareData("AD14", "data/explore.conf")
+    atype = self.h.getSurvName('c brain, Entorhinal Cortex')
+    atype = [re.sub(".* ", "", str(k)) for k in atype]
+    atypes = ['C', 'AD']
+    ahash = {'tangle_e1_le1':1, 'normal_e1_le1':0}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getDunckley2006 = getDunckley2006
+
+
+def getBlalock2011(self, tn = 1):
+    self.prepareData("AD15", "data/explore.conf")
+    atype = self.h.getSurvName('c disease status')
+    atypes = ['C', 'I', 'M', 'S']
+    ahash = {'Moderate':2, 'Severe':3, 'Incipient':1, 'Control':0}
+    if tn == 2:
+        atypes = ['C', 'AD']
+        ahash = {'Moderate':1, 'Severe':1, 'Incipient':1, 'Control':0}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getBlalock2011 = getBlalock2011
+
+def getNativio2020(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD16", "data/explore.conf")
+    atype = self.h.getSurvName('c title2')
+    atypes = ['Y', 'O', "AD"]
+    ahash = {'AD [RNA-seq]':2, 'Old [RNA-seq]':1, 'Young [RNA-seq]':0}
+    if (tn == 2):
+        atypes = ['O', "AD"]
+        ahash = {'AD [RNA-seq]':1, 'Old [RNA-seq]':0}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getNativio2020 = getNativio2020
+
+def getPascal2011(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD17", "data/explore.conf")
+    atype = self.h.getSurvName('c gender (ch1)')
+    ahash = {'F':0, 'M':1}
+    gval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c disease (ch1)')
+    ahash = {"Alzheimer's disease":0, 'Amyotrophic lateral sclerosis':1,
+             "Huntington's disease":2, 'Multiple sclerosis':3,
+             "Parkinson's disease":4, 'Schizophrenia':5}
+    tval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c disease2 (ch1)')
+    atypes = ['C', 'D']
+    ahash = {'AD_Control':0, 'AD_Disease':1, 'ALS_Control':0, 'ALS_Disease':1,
+             'HD_Control':0, 'HD_Disease':1, 'MS_Control':0, 'MS_Disease':1,
+             'PD_Control':0, 'PD_Disease':1, 'SCHIZ_Control':0, 'SCHIZ_Disease':1}
+    if (tn == 2):
+        atype = [atype[i] if tval[i] == ta and gval[i] == tb
+                 else None for i in range(len(atype))]
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getPascal2011 = getPascal2011
+def getNancy2020(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD18", "data/explore.conf")
+    atype = self.h.getSurvName('c diagnosis (ch1)')
+    atypes = ['C', "AD"]
+    ahash = {'AD':1, 'healthy control':0}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getNancy2020 = getNancy2020
+
+def getChew2019(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD19", "data/explore.conf")
+    atype=self.h.getSurvName('c CellType')
+    ahash = {'unID':0, 'endo':1, 'oligo':2, 'astro':3, 'OPC':4, 'doublet':5,
+             'neuron':6, 'mg':7}
+    tval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c disease state (ch1)')
+    atypes = ['C', "AD"]
+    ahash = {'control':0, 'AD':1}
+    if (tn == 2):
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+    if (tn == 3):
+        atype=self.h.getSurvName('c CellType')
+        atypes = ['unID', 'endo', 'oligo', 'astro', 'OPC', 'doublet',
+                 'neuron', 'mg']
+        ahash = {}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getChew2019 = getChew2019
+
+def getADPooledDyn(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD20", "data/explore.conf")
+    atype = self.h.getSurvName('c AD specific');
+    ahash = {'0':0, '1':1}
+    tval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c Disease State');
+    atypes = ['N', 'AD']
+    ahash = {'Normal':0, "Alzheimer's Disease":1, 'normal':0,
+            'definite AD':0, 'Control':0}
+    if (tn == 2):
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getADPooledDyn = getADPooledDyn
+
+def getMiller2017(self, tn=1, ta=0, tb=0):
+    self.prepareData("AD21", "data/explore.conf")
+    atype = self.h.getSurvName('c hemisphere (ch1)');
+    ahash = {'left':0, 'right':1}
+    sval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c brain region (ch1)');
+    ahash = {'TCx':0, 'PCx':1, 'HIP':2, 'FWM':3}
+    tval = [ahash[i] if i in ahash else None for i in atype]
+    atype = self.h.getSurvName('c new_nincds_arda_diagnosis');
+    atypes = ['No Dementia', "AD" ]
+    ahash = {'No Dementia':0, "Possible Alzheimer'S Disease":1,
+            "Probable Alzheimer'S Disease":1}
+    if (tn == 2):
+        atype = [atype[i] if tval[i] == ta
+                 else None for i in range(len(atype))]
+    if (tn == 3):
+        atype = [atype[i] if tval[i] == ta and sval[i] == tb
+                 else None for i in range(len(atype))]
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getMiller2017 = getMiller2017
+
+def getZhang2013pfc(self):
+    self.prepareData("AD22", "data/explore.conf")
+    atype = self.h.getSurvName("c disease")
+    atypes = ['A', 'N']
+    ahash = {}
+    self.initData(atype, atypes, ahash)
+    return
+bone.IBDAnalysis.getZhang2013pfc = getZhang2013pfc
 
