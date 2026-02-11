@@ -52,7 +52,19 @@ Boolean analysis yielded a core 40-gene AD signature, consisting of 20 upregulat
 | 50  | 36  | GSE104687  | Hippocampus                                 |
 | 101 | 129 | GSE44772   | PFC (GSE44772 / GSE44770)                   |
 
-## Benchmark for future models
+## BoLAD Benchmark
 
-Download this benchmark dataset from public repository.
+We created Boolean Lab Alzheimer’s Disease Benchmark (BoLAD benchmark) based on the above validation datasets.
+Download this benchmark dataset from public repository[1].
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18603728.svg)](https://doi.org/10.5281/zenodo.18603728)
+
+
+```bash
+cd data
+tar xvzf BoLAD.tar.gz
+```
+
+## References
+[1] Sahoo, D. (2026). Boolean Lab Alzheimer's Disease Benchmark (Version v1) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.18603728
+
 
