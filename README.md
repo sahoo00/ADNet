@@ -54,7 +54,7 @@ Boolean analysis yielded a core 40-gene AD signature, consisting of 20 upregulat
 
 ## BoLAD Benchmark
 
-We created Boolean Lab Alzheimer’s Disease Benchmark (BoLAD benchmark) based on the above validation datasets.
+We created Boolean Lab Alzheimer’s Disease Benchmark (BoLAD benchmark) based on the above training and validation datasets.
 Download this benchmark dataset from public repository[1].
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18603728.svg)](https://doi.org/10.5281/zenodo.18603728)
 
@@ -63,6 +63,16 @@ Download this benchmark dataset from public repository[1].
 cd data
 tar xvzf BoLAD.tar.gz
 ```
+
+## BoNE analysis
+
+Uncomment lines in the file scr and run following command.
+
+```bash
+bash scr
+```
+
+Please refer to the jupyter notebook [AsymAD.ipynb](AsymAD.ipynb) to reproduce the results.
 
 ## References
 [1] Sahoo, D. (2026). Boolean Lab Alzheimer's Disease Benchmark (Version v1) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.18603728
